@@ -5,8 +5,10 @@ from utils import plot_examples
 from albumentations import augmentations
 import cv2
 
+# we can have multiple masks too
 image = Image.open('./images/elon.jpeg')
 mask = Image.open('./images/mask.jpeg')
+mask2 = Image.open('./images/second_mask.jpeg')
 
 my_transforms = A.Compose(
     [
@@ -28,12 +30,14 @@ my_transforms = A.Compose(
 img_list = [image]
 image = np.array(image)
 mask = np.array(mask)
+mask2 = np.array(mask2)
 for i in range(5):
-    augmentations = my_transforms(image=image, mask=mask)
+    augmentations = my_transforms(image=image, masks=[mask, mask2])
     augmented_img = augmentations["image"]
-    augmented_mask = augmentations["mask"]
+    augmented_mask = augmentations["masks"]
     img_list.append(augmented_img)
-    img_list.append(augmented_mask)
+    img_list.append(augmented_mask[0])
+    img_list.append(augmented_mask[1])
 
 # plotting the images and masks
 plot_examples(img_list)
